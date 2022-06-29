@@ -8,7 +8,6 @@ public class Geo {
         this.lat = lat;
         this.lng = lng;
     }
-
     @Override
     public String toString() {
         return "geo:{" +
