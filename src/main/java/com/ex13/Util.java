@@ -3,8 +3,9 @@ package com.ex13;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class Util {
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
     private static final Gson GSON = new Gson();
+    static int j;
 
     public static User sendPost(URI uri, User user) throws IOException, InterruptedException {
         final String requestBody = GSON.toJson(user);
@@ -79,6 +81,46 @@ public class Util {
         return null;
     }
 
+    public static int maxId(URI uri) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder().uri(uri)
+                .GET().build();
+        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        final List<User> users = GSON.fromJson(response.body(), new TypeToken<List<User>>() {
+        }.getType());
+        for (int i = 0; i < users.toArray().length - 1; i++) {
+            j = users.get(i).getId();
+            if (users.get(i).getId() < users.get(i + 1).getId()) {
+                j = users.get(i + 1).getId();
+            } else {
+                j = users.get(i).getId();
+            }
+
+        }
+        return j;
+    }
+
+    public static void sendGetAllComents(URI uri) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder().uri(uri)
+                .GET().build();
+        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        File userXpostYcomments = new File("C:\\Users\\grafm\\IdeaProjects\\Unit13\\src\\resources\\user-X-post-Y-comments.json");
+        try (FileWriter writer = new FileWriter(userXpostYcomments)) {
+            writer.write(response.body().toString());
+            writer.flush();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static List<Challenge> openChalleng(URI uri) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder().uri(uri)
+                .GET().build();
+        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        final List<Challenge> challenges = GSON.fromJson(response.body(), new TypeToken<List<Challenge>>() {
+        }.getType());
+        List<Challenge> openChalleng = challenges.stream().filter((o) -> !o.isCompleted()).collect(Collectors.toList());
+        return openChalleng;
+    }
 }
 
 

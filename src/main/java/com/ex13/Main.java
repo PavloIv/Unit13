@@ -6,10 +6,10 @@ import java.util.List;
 
 public class Main {
     private static final String ADRESATE = "https://jsonplaceholder.typicode.com/users";
+    private static final String COMENT = "https://jsonplaceholder.typicode.com/posts";
 
     public static void main(String[] args) throws IOException, InterruptedException {
         int id;
-
         User Pavlo = new User();
         Pavlo.setName("Pavlo");
         Pavlo.setUsername("Graf");
@@ -38,5 +38,11 @@ public class Main {
 
         final User getUserForUserName = Util.sendGet(URI.create(ADRESATE), "Maxime_Nienow");
         System.out.println("getUserForUserName = " + getUserForUserName);
+
+        Util.sendGetAllComents(URI.create(String.format("%s/%d/comments",
+                COMENT, id = Util.maxId(URI.create(COMENT)))));
+
+        final List<Challenge> todos = Util.openChalleng(URI.create(String.format("%s/%d/todos", ADRESATE, id = 8)));
+        System.out.println("openChallenge = " + todos);
     }
 }
