@@ -85,25 +85,25 @@ public class Util {
         HttpRequest request = HttpRequest.newBuilder().uri(uri)
                 .GET().build();
         HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-        final List<User> users = GSON.fromJson(response.body(), new TypeToken<List<User>>() {
+        final List<Posts> posts = GSON.fromJson(response.body(), new TypeToken<List<Posts>>() {
         }.getType());
-        for (int i = 0; i < users.toArray().length - 1; i++) {
-            j = users.get(i).getId();
-            if (users.get(i).getId() < users.get(i + 1).getId()) {
-                j = users.get(i + 1).getId();
+        for (int i = 0; i < posts.toArray().length - 1; i++) {
+            j = posts.get(i).getId();
+            if (posts.get(i).getId() < posts.get(i + 1).getId()) {
+                j = posts.get(i + 1).getId();
             } else {
-                j = users.get(i).getId();
+                j = posts.get(i).getId();
             }
 
         }
         return j;
     }
 
-    public static void sendGetAllComents(URI uri) throws IOException, InterruptedException {
+    public static void sendGetAllComents(URI uri,int userId,int postId) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder().uri(uri)
                 .GET().build();
         HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-        File userXpostYcomments = new File("C:\\Users\\grafm\\IdeaProjects\\Unit13\\src\\resources\\user-X-post-Y-comments.json");
+        File userXpostYcomments = new File(String.format("C:\\Users\\grafm\\IdeaProjects\\Unit13\\src\\resources\\user-%d-post-%d-comments.json",userId,postId));
         try (FileWriter writer = new FileWriter(userXpostYcomments)) {
             writer.write(response.body().toString());
             writer.flush();
