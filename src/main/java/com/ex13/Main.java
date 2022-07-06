@@ -39,10 +39,12 @@ public class Main {
         final User getUserForUserName = Util.sendGet(URI.create(ADRESATE), "Maxime_Nienow");
         System.out.println("getUserForUserName = " + getUserForUserName);
 
-        int userId = 11;
+        int userId = 9;
+        int maxID = Util.maxId(URI.create(String.format("%s/%d/posts",ADRESATE,userId)));
+
         Util.sendGetAllComents(URI.create(String.format("%s/%d/comments",
-                COMENT, id = Util.maxId(URI.create(String.format("%s/%d/posts",ADRESATE,userId))))),
-                userId,Util.maxId(URI.create(String.format("%s/%d/posts",ADRESATE,userId))));
+                COMENT, maxID)),
+                userId,maxID);
 
         final List<Challenge> todos = Util.openChalleng(URI.create(String.format("%s/%d/todos", ADRESATE, id = 8)));
         System.out.println("openChallenge = " + todos);

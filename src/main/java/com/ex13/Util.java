@@ -89,12 +89,7 @@ public class Util {
         }.getType());
         for (int i = 0; i < posts.toArray().length - 1; i++) {
             j = posts.get(i).getId();
-            if (posts.get(i).getId() < posts.get(i + 1).getId()) {
-                j = posts.get(i + 1).getId();
-            } else {
-                j = posts.get(i).getId();
-            }
-
+            j = Math.max(posts.get(i).getId(), posts.get(i + 1).getId());
         }
         return j;
     }
@@ -103,9 +98,11 @@ public class Util {
         HttpRequest request = HttpRequest.newBuilder().uri(uri)
                 .GET().build();
         HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        File mkd = new File(String.format("C:\\Users\\grafm\\IdeaProjects\\Unit13\\src\\resources"));
+        mkd.mkdirs();
         File userXpostYcomments = new File(String.format("C:\\Users\\grafm\\IdeaProjects\\Unit13\\src\\resources\\user-%d-post-%d-comments.json",userId,postId));
         try (FileWriter writer = new FileWriter(userXpostYcomments)) {
-            writer.write(response.body().toString());
+            writer.write(response.body());
             writer.flush();
         } catch (IOException e) {
             System.out.println(e.getMessage());
